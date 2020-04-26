@@ -33,6 +33,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.regex.Pattern;
 
+import static com.example.worldtest.ui.home.HomeFragment.GetUserHead;
 import static com.example.worldtest.ui.home.HomeFragment.matchResult;
 
 public class find extends AppCompatActivity {
@@ -212,7 +213,7 @@ public class find extends AppCompatActivity {
                 String regFormat = "\\s*|\t|\r|\n";
                 String regTag = "<[^>]*>";
                 final String text = result.replaceAll(regFormat, "").replaceAll(regTag, "");
-                try {
+
                     Bitmap bitmap;
                     byte[] data;
                     Drawable drawable;
@@ -239,25 +240,14 @@ public class find extends AppCompatActivity {
                             startActivity(intent);
                         }
                     });
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
             }
         });
 
 
     }
 
-    public static byte[] GetUserHead(String urlpath) throws IOException {
-        URL url = new URL(urlpath);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET"); // 设置请求方法为GET
-        conn.setReadTimeout(5 * 1000); // 设置请求过时时间为5秒
-        InputStream inputStream = conn.getInputStream(); // 通过输入流获得图片数据
-        byte[] data = StreamTool.readInputStream(inputStream); // 获得图片的二进制数据
-        return data;
 
-    }
     //加载提示
     public void showProgressDialog(String title, String message) {
         if (progressDialog == null) {

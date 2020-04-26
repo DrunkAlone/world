@@ -8,19 +8,17 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.os.StrictMode;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+
 import android.widget.LinearLayout;
-import android.widget.ListView;
+
 import android.widget.ScrollView;
 
 import androidx.annotation.NonNull;
@@ -38,11 +36,11 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.Objects;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.example.worldtest.ui.home.Introduction.GetUserHead;
+
 
 public class HomeFragment extends Fragment {
 
@@ -58,7 +56,7 @@ public class HomeFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
         Exception();
-        showProgressDialog("提示", "正在加载......");
+        showProgressDialog();
 
         final LinearLayout linearLayout=root.findViewById(R.id.line1);
 
@@ -76,7 +74,7 @@ public class HomeFragment extends Fragment {
                     case MotionEvent.ACTION_MOVE:
                         if (v.getScrollY() <= 0) {
                         } else if (scrollView.getChildAt(0).getMeasuredHeight() <= v.getHeight() + v.getScrollY()) {
-                            showProgressDialog("提示", "正在加载......");
+                            showProgressDialog();
                             send(linearLayout);
                         }
                         break;
@@ -101,8 +99,7 @@ public class HomeFragment extends Fragment {
 
             }
         });
-        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
-        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
+
 
         return root;
     }
@@ -184,7 +181,7 @@ public class HomeFragment extends Fragment {
 
         });
     }
-    public static String matchResult(Pattern p,String str)
+    static String matchResult(Pattern p, String str)
     {
         StringBuilder sb = new StringBuilder();
         Matcher m = p.matcher(str);
@@ -253,13 +250,13 @@ public class HomeFragment extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                Bitmap bitmap=null;
+                byte[] data=null;
+                Drawable drawable=null;
                 String regFormat = "\\s*|\t|\r|\n";
                 String regTag = "<[^>]*>";
                 String text = result.replaceAll(regFormat, "").replaceAll(regTag, "");
-                try {
-                    Bitmap bitmap;
-                    byte[] data;
-                    Drawable drawable;
+
                     data = GetUserHead(text);
                     bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
                     drawable = new BitmapDrawable(getResources(),bitmap);
@@ -283,39 +280,43 @@ public class HomeFragment extends Fragment {
                         }
                     });
 
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }finally {
-
-                }
             }
         });
     }
 
 
-    public static byte[] GetUserHead(String urlpath) throws IOException {
-        URL url = new URL(urlpath);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET"); // 设置请求方法为GET
-        conn.setReadTimeout(5 * 1000); // 设置请求过时时间为5秒
-        InputStream inputStream = conn.getInputStream(); // 通过输入流获得图片数据
-        byte[] data = StreamTool.readInputStream(inputStream); // 获得图片的二进制数据
-        return data;
+    static byte[] GetUserHead(String urlpath)  {
+        HttpURLConnection conn=null;
+        byte[] data=null;
+        try{
+            URL url = new URL(urlpath);
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET"); // 设置请求方法为GET
+            conn.setReadTimeout(5 * 1000); // 设置请求过时时间为5秒
+            InputStream inputStream = conn.getInputStream(); // 通过输入流获得图片数据
+            data = StreamTool.readInputStream(inputStream); // 获得图片的二进制数据
 
+        }catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if(conn!=null){
+                conn.disconnect();
+            }
+        }
+        return data;
     }
 
     /*
      * 提示加载
      */
-    public void showProgressDialog(String title, String message) {
+    private void showProgressDialog() {
         if (progressDialog == null) {
 
             progressDialog = ProgressDialog.show(getActivity(),
-                    title, message, true, false);
+                    "提示", "正在加载......", true, false);
         } else if (progressDialog.isShowing()) {
-            progressDialog.setTitle(title);
-            progressDialog.setMessage(message);
+            progressDialog.setTitle("提示");
+            progressDialog.setMessage("正在加载......");
         }
 
         progressDialog.show();

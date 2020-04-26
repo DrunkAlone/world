@@ -28,6 +28,8 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import static com.example.worldtest.ui.home.HomeFragment.GetUserHead;
+
 public class Introduction extends AppCompatActivity {
 
 
@@ -231,15 +233,13 @@ public class Introduction extends AppCompatActivity {
                 String regTag = "<[^>]*>";
                 String text = result.replaceAll(regFormat, "").replaceAll(regTag, "");
                 System.out.println("show1_1:"+text);
-                try {
+
                     Bitmap bitmap;
                     byte[] data;
                     data = GetUserHead(text);
                     bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
                     imageView1.setImageBitmap(bitmap);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
             }
         });
 
@@ -253,15 +253,13 @@ public class Introduction extends AppCompatActivity {
                 String regTag = "<[^>]*>";
                 String text = result.replaceAll(regFormat, "").replaceAll(regTag, "");
                 System.out.println("show1_2:"+text);
-                try {
+
                     Bitmap bitmap;
                     byte[] data;
                     data = GetUserHead(text);
                     bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
                     imageView2.setImageBitmap(bitmap);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
             }
         });
 
@@ -275,29 +273,17 @@ public class Introduction extends AppCompatActivity {
                 String regTag = "<[^>]*>";
                 String text = result.replaceAll(regFormat, "").replaceAll(regTag, "");
                 System.out.println("show1_3:"+text);
-                try {
                     Bitmap bitmap;
                     byte[] data;
                     data = GetUserHead(text);
                     bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
                     imageView3.setImageBitmap(bitmap);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
             }
         });
 
     }
-    public static byte[] GetUserHead(String urlpath) throws IOException {
-        URL url = new URL(urlpath);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET"); // 设置请求方法为GET
-        conn.setReadTimeout(5 * 1000); // 设置请求过时时间为5秒
-        InputStream inputStream = conn.getInputStream(); // 通过输入流获得图片数据
-        byte[] data = StreamTool.readInputStream(inputStream); // 获得图片的二进制数据
-        return data;
 
-    }
 
     //加载提示
     public void showProgressDialog(String title, String message) {

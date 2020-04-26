@@ -1,33 +1,29 @@
 package com.example.worldtest.ui.home;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-
 import android.os.Bundle;
-
 import android.view.Gravity;
-
 import android.widget.ImageView;
-
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.worldtest.R;
 
 import java.io.BufferedReader;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import static com.example.worldtest.ActivityCollectorUtil.addActivity;
+import static com.example.worldtest.ActivityCollectorUtil.removeActivity;
 import static com.example.worldtest.ui.home.HomeFragment.GetUserHead;
 
 public class Introduction extends AppCompatActivity {
@@ -35,7 +31,6 @@ public class Introduction extends AppCompatActivity {
 
     String id;
     private TextView textView;
-    //private ImageView imageView;
     private ImageView imageView1;
     private ImageView imageView2;
     private ImageView imageView3;
@@ -46,28 +41,29 @@ public class Introduction extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_introduction);
+        addActivity(this);
         showProgressDialog("提示", "正在加载......");
 
+        textView=findViewById(R.id.introtext);
 
-         textView=findViewById(R.id.introtext);
-
-         //imageView=findViewById(R.id.introimage);
-         imageView1=findViewById(R.id.introimage1);
-         imageView2=findViewById(R.id.introimage2);
-         imageView3=findViewById(R.id.introimage3);
+        //imageView=findViewById(R.id.introimage);
+        imageView1=findViewById(R.id.introimage1);
+        imageView2=findViewById(R.id.introimage2);
+        imageView3=findViewById(R.id.introimage3);
 
         Bundle bundle = this.getIntent().getExtras();
         id = bundle.getString("textId");
         send1();
         send();
-
     }
 
     private void send() {
         //开启线程，发送请求
+        showProgressDialog("提示", "正在加载......");
         new Thread(new Runnable() {
             @Override
             public void run() {
+
                 HttpURLConnection connection = null;
                 BufferedReader reader = null;
                 try {
@@ -111,30 +107,34 @@ public class Introduction extends AppCompatActivity {
                 }
             }
         }).start();
+
     }
 
     private void show(final String result) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                showProgressDialog("提示", "正在加载......");
                 String regFormat = "\\s*|\t|\r|\n";
                 String regTag = "<[^>]*>";
                 String text = result.replaceAll(regFormat, "").replaceAll(regTag, "");
-              //  System.out.println(text);
+                //  System.out.println(text);
                 textView.setText(text);
                 textView.setGravity(Gravity.CENTER_HORIZONTAL);
                 textView.setTextSize(15);
-
+                progressDialog.dismiss();
             }
         });
 
     }
 
     private void send1() {
+        showProgressDialog("提示", "正在加载......");
         //开启线程，发送请求
         new Thread(new Runnable() {
             @Override
             public void run() {
+
                 HttpURLConnection  connection = null;
                 BufferedReader reader=null;
                 try {
@@ -156,11 +156,6 @@ public class Introduction extends AppCompatActivity {
                     while ((line = reader.readLine()) != null) {
                         if(i==0||i==1||i==2||i==3||i==4||i==5||i==6||i==7){//System.out.println("i="+i+":"+line);
                             i++;}
-                       /* else if(i==7){
-                            i++;
-                            System.out.println("i==7"+line);
-                            show1(line);
-                        }*/
                         else if (i==8){
                             i++;
                             //System.out.println("i==8"+line);
@@ -194,52 +189,32 @@ public class Introduction extends AppCompatActivity {
                     if (connection != null) {//关闭连接
                         connection.disconnect();
                     }
-                    progressDialog.dismiss();
 
                 }
             }
         }).start();
+
     }
 
-/*
-    private void show1(final String result) {
+
+    private void show1_1(final String result) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-
                 String regFormat = "\\s*|\t|\r|\n";
                 String regTag = "<[^>]*>";
                 String text = result.replaceAll(regFormat, "").replaceAll(regTag, "");
-                System.out.println("show1:"+text);
+                //System.out.println("show1_1:"+text);
                 try {
                     Bitmap bitmap;
                     byte[] data;
                     data = GetUserHead(text);
                     bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                    imageView.setImageBitmap(bitmap);
+                    imageView1.setImageBitmap(bitmap);
+                    progressDialog.dismiss();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
-        });
-
-    }*/
-    private void show1_1(final String result) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-                String regFormat = "\\s*|\t|\r|\n";
-                String regTag = "<[^>]*>";
-                String text = result.replaceAll(regFormat, "").replaceAll(regTag, "");
-                System.out.println("show1_1:"+text);
-
-                    Bitmap bitmap;
-                    byte[] data;
-                    data = GetUserHead(text);
-                    bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                    imageView1.setImageBitmap(bitmap);
-
             }
         });
 
@@ -248,18 +223,20 @@ public class Introduction extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-
                 String regFormat = "\\s*|\t|\r|\n";
                 String regTag = "<[^>]*>";
                 String text = result.replaceAll(regFormat, "").replaceAll(regTag, "");
-                System.out.println("show1_2:"+text);
-
+                // System.out.println("show1_2:"+text);
+                try {
                     Bitmap bitmap;
                     byte[] data;
                     data = GetUserHead(text);
                     bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
                     imageView2.setImageBitmap(bitmap);
-
+                    progressDialog.dismiss();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -268,17 +245,20 @@ public class Introduction extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-
                 String regFormat = "\\s*|\t|\r|\n";
                 String regTag = "<[^>]*>";
                 String text = result.replaceAll(regFormat, "").replaceAll(regTag, "");
-                System.out.println("show1_3:"+text);
+                //System.out.println("show1_3:"+text);
+                try {
                     Bitmap bitmap;
                     byte[] data;
                     data = GetUserHead(text);
                     bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
                     imageView3.setImageBitmap(bitmap);
-
+                    progressDialog.dismiss();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -298,5 +278,9 @@ public class Introduction extends AppCompatActivity {
         progressDialog.show();
 
     }
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        removeActivity(this);
+    }
 }

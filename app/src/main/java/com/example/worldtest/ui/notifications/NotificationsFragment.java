@@ -18,6 +18,8 @@ import com.example.worldtest.loginActivity;
 import com.example.worldtest.myinfo.SettingsByPreferenceActivity;
 import com.example.worldtest.ui.home.find;
 
+import static com.example.worldtest.ActivityCollectorUtil.finishAllActivity;
+
 public class NotificationsFragment extends Fragment {
 
     private NotificationsViewModel notificationsViewModel;
@@ -47,6 +49,7 @@ public class NotificationsFragment extends Fragment {
         mBtMainLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finishAllActivity();
                 Intent intent = new Intent(NotificationsFragment.this.getActivity(), loginActivity.class);
                 startActivity(intent);
 

@@ -22,6 +22,9 @@ import com.mob.MobSDK;
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 
+import static com.example.worldtest.ActivityCollectorUtil.addActivity;
+import static com.example.worldtest.ActivityCollectorUtil.removeActivity;
+
 public class PhoneActivity extends AppCompatActivity implements View.OnClickListener{
     private RelativeLayout mRlPhoneactivityTop;
     private EditText mEtPhoneactivityPhone;
@@ -42,6 +45,7 @@ public class PhoneActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone);
+        addActivity(this);
         initView();
         MobSDK.submitPolicyGrantResult(true, null);
     }
@@ -65,6 +69,7 @@ public class PhoneActivity extends AppCompatActivity implements View.OnClickList
     protected void onDestroy() {//销毁
         super.onDestroy();
         SMSSDK.unregisterEventHandler(eventHandler);
+        removeActivity(this);
     }
     @Override
     public void onClick(View view) {
@@ -74,8 +79,8 @@ public class PhoneActivity extends AppCompatActivity implements View.OnClickList
                 Toast toast = Toast.makeText(getApplicationContext(),"验证码已发送至您的手机！",Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER_VERTICAL| Gravity.CENTER_HORIZONTAL, 0, 0);
                 toast.show();
+            }
         }
-    }
         else if(view.getId() == R.id.iv_phoneactivity_back){
             Intent intent1 = new Intent(this, loginActivity.class);
             startActivity(intent1);
@@ -223,4 +228,5 @@ public class PhoneActivity extends AppCompatActivity implements View.OnClickList
             }
         }
     };
+
 }

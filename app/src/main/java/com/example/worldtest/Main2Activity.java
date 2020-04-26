@@ -2,13 +2,16 @@ package com.example.worldtest;
 
 import android.os.Bundle;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import static com.example.worldtest.ActivityCollectorUtil.addActivity;
+import static com.example.worldtest.ActivityCollectorUtil.removeActivity;
 
 public class Main2Activity extends AppCompatActivity {
 
@@ -16,6 +19,7 @@ public class Main2Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        addActivity(this);
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -26,5 +30,9 @@ public class Main2Activity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
     }
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        removeActivity(this);
+    }
 }

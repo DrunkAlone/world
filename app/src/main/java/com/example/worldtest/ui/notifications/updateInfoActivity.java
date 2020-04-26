@@ -32,6 +32,8 @@ import java.net.URLEncoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.example.worldtest.ActivityCollectorUtil.addActivity;
+import static com.example.worldtest.ActivityCollectorUtil.removeActivity;
 import static java.util.regex.Pattern.compile;
 
 public class updateInfoActivity extends AppCompatActivity implements View.OnClickListener{
@@ -58,6 +60,7 @@ public class updateInfoActivity extends AppCompatActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_info);
+        addActivity(this);
         Intent intent = getIntent();
         name = intent.getStringExtra("name");
         password = intent.getStringExtra("password");
@@ -69,7 +72,7 @@ public class updateInfoActivity extends AppCompatActivity implements View.OnClic
         mEtUpdateactivityPassword.setText(password);
         //根据初值设置默认选项
         if(sex.equals("男")){
-        mRBUpdateactivitymale.setChecked(true);}
+            mRBUpdateactivitymale.setChecked(true);}
         else{
             mRBUpdateactivityfemale.setChecked(true);
         }
@@ -133,7 +136,7 @@ public class updateInfoActivity extends AppCompatActivity implements View.OnClic
                 if(isContainAll(password)){
                     if(password.length()>=9&&password.length()<=20){
                         if(number.length() == 11&&IsNumber(number)){
-                        //开启线程，发送请求
+                            //开启线程，发送请求
                             new Thread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -185,7 +188,7 @@ public class updateInfoActivity extends AppCompatActivity implements View.OnClic
                                     }
                                 }
                             }).start();
-            }else{
+                        }else{
                             Toast.makeText(this, "手机号格式错误", Toast.LENGTH_SHORT).show();
                         }
                     }else{
@@ -215,8 +218,8 @@ public class updateInfoActivity extends AppCompatActivity implements View.OnClic
                 finish();
                 Toast.makeText(updateInfoActivity.this, "修改信息成功！", Toast.LENGTH_SHORT).show();
             }
-            });
-        }
+        });
+    }
     public static boolean isContainAll(String str) {
         boolean isDigit = false;//定义一个boolean值，用来表示是否包含数字
         boolean isLetter = false;//定义一个boolean值，用来表示是否包含字母
@@ -239,5 +242,10 @@ public class updateInfoActivity extends AppCompatActivity implements View.OnClic
         }else{
             return false;
         }
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        removeActivity(this);
     }
 }

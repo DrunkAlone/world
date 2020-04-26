@@ -8,19 +8,14 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.os.StrictMode;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ScrollView;
 
 import androidx.annotation.NonNull;
@@ -38,11 +33,8 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static com.example.worldtest.ui.home.Introduction.GetUserHead;
 
 public class HomeFragment extends Fragment {
 
@@ -57,13 +49,10 @@ public class HomeFragment extends Fragment {
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
-        Exception();
         showProgressDialog("提示", "正在加载......");
-
         final LinearLayout linearLayout=root.findViewById(R.id.line1);
-
         send(linearLayout);
-
+        Exception();
         //下滑触发
         final ScrollView scrollView=root.findViewById(R.id.scrollView3);
         scrollView.setOnTouchListener(new View.OnTouchListener() {
@@ -101,17 +90,17 @@ public class HomeFragment extends Fragment {
 
             }
         });
-        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
-        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
 
         return root;
     }
 
     private void send(final LinearLayout linearLayout) {
+        showProgressDialog("提示", "正在加载......");
         //开启线程，发送请求
         new Thread(new Runnable() {
             @Override
             public void run() {
+
                 HttpURLConnection connection = null;
                 BufferedReader reader = null;
                 try {
@@ -120,9 +109,9 @@ public class HomeFragment extends Fragment {
                     //设置请求方法
                     connection.setRequestMethod("GET");
                     //设置连接超时时间（毫秒）
-                    connection.setConnectTimeout(5000);
+                    connection.setConnectTimeout(50000);
                     //设置读取超时时间（毫秒）
-                    connection.setReadTimeout(5000);
+                    connection.setReadTimeout(50000);
                     //返回输入流
                     InputStream in = connection.getInputStream();
                     //读取输入流
@@ -149,12 +138,11 @@ public class HomeFragment extends Fragment {
                     if (connection != null) {//关闭连接
                         connection.disconnect();
                     }
-                    progressDialog.dismiss();
-
 
                 }
             }
         }).start();
+
 
     }
 
@@ -169,7 +157,7 @@ public class HomeFragment extends Fragment {
                 } else {
                     String [] spString = text.split("&nbsp;&nbsp;&nbsp;");
                     if(spString.length<3){}else {
-                      //  System.out.println(spString.length);
+                        //  System.out.println(spString.length);
                         String id = spString[0];
                         String name = spString[1];
                         String brief_infor = spString[2];
@@ -178,6 +166,7 @@ public class HomeFragment extends Fragment {
                         String EnglishName = name.replace(chineName, "");
                         String show = chineName + "\n" + EnglishName + "\n" + "简介：" + brief_infor;
                         send1(id, show, linearLayout);
+                        progressDialog.dismiss();
                     }
                 }
             }
@@ -198,23 +187,25 @@ public class HomeFragment extends Fragment {
 
 
     private void send1(final String id,final String show, final LinearLayout linearLayout) {
+        showProgressDialog("提示", "正在加载......");
         //开启线程，发送请求
         new Thread(new Runnable() {
             @Override
             public void run() {
+
                 HttpURLConnection  connection = null;
                 BufferedReader reader=null;
                 try {
                     String path = URLEncoder.encode(URLEncoder.encode(id, "utf-8"), "utf-8");
                     URL url1 = new URL("http://47.100.139.135:8080/TestLink/ImageServlet?id=" + path);
-                  //  System.out.println(url1);
+                    //  System.out.println(url1);
                     connection = (HttpURLConnection) url1.openConnection();
                     //设置请求方法
                     connection.setRequestMethod("GET");
                     //设置连接超时时间（毫秒）
-                    connection.setConnectTimeout(5000);
+                    connection.setConnectTimeout(50000);
                     //设置读取超时时间（毫秒）
-                    connection.setReadTimeout(5000);
+                    connection.setReadTimeout(50000);
                     //返回输入流
                     InputStream in = connection.getInputStream();
                     reader = new BufferedReader(new InputStreamReader(in));
@@ -245,6 +236,7 @@ public class HomeFragment extends Fragment {
                 }
             }
         }).start();
+
 
     }
 
@@ -280,14 +272,14 @@ public class HomeFragment extends Fragment {
                             bundle.putString("textId", id);
                             intent.putExtras(bundle);
                             startActivity(intent);
+
                         }
                     });
+                    progressDialog.dismiss();
 
 
                 } catch (IOException e) {
                     e.printStackTrace();
-                }finally {
-
                 }
             }
         });
@@ -298,7 +290,7 @@ public class HomeFragment extends Fragment {
         URL url = new URL(urlpath);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET"); // 设置请求方法为GET
-        conn.setReadTimeout(5 * 1000); // 设置请求过时时间为5秒
+        conn.setReadTimeout(5 * 5000); // 设置请求过时时间为5秒
         InputStream inputStream = conn.getInputStream(); // 通过输入流获得图片数据
         byte[] data = StreamTool.readInputStream(inputStream); // 获得图片的二进制数据
         return data;

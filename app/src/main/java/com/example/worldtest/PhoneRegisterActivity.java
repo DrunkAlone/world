@@ -26,6 +26,9 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import static com.example.worldtest.ActivityCollectorUtil.addActivity;
+import static com.example.worldtest.ActivityCollectorUtil.removeActivity;
+
 public class PhoneRegisterActivity extends AppCompatActivity implements View.OnClickListener{
     private String realCode;
     private Button mBtPhoneRegisteractivityRegister;
@@ -49,6 +52,7 @@ public class PhoneRegisterActivity extends AppCompatActivity implements View.OnC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_register);
+        addActivity(this);
         initView();
         Intent intent = getIntent();
         number = intent.getStringExtra("number");
@@ -107,63 +111,63 @@ public class PhoneRegisterActivity extends AppCompatActivity implements View.OnC
                     e.printStackTrace();
                 }
                 if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(password) && !TextUtils.isEmpty(phoneCode) && !TextUtils.isEmpty(number)) {
-                                    if (phoneCode.equals(realCode)) {
-                                        new Thread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                HttpURLConnection connection = null;
-                                                BufferedReader reader = null;
-                                                try {
-                                                    URL url = new URL("http://47.100.139.135:8080/TheWorldFantasies/UserInsertServlet?name=" + name + "&password=" + password + "&sex=" + sex + "&number=" + number);
-                                                    System.out.println(url);
-                                                    connection = (HttpURLConnection) url.openConnection();
-                                                    //设置请求方法
-                                                    connection.setRequestMethod("GET");
-                                                    //设置连接超时时间（毫秒）
-                                                    connection.setConnectTimeout(5000);
-                                                    //设置读取超时时间（毫秒）
-                                                    connection.setReadTimeout(5000);
+                    if (phoneCode.equals(realCode)) {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                HttpURLConnection connection = null;
+                                BufferedReader reader = null;
+                                try {
+                                    URL url = new URL("http://47.100.139.135:8080/TheWorldFantasies/UserInsertServlet?name=" + name + "&password=" + password + "&sex=" + sex + "&number=" + number);
+                                    System.out.println(url);
+                                    connection = (HttpURLConnection) url.openConnection();
+                                    //设置请求方法
+                                    connection.setRequestMethod("GET");
+                                    //设置连接超时时间（毫秒）
+                                    connection.setConnectTimeout(5000);
+                                    //设置读取超时时间（毫秒）
+                                    connection.setReadTimeout(5000);
 
-                                                    //返回输入流
-                                                    InputStream in = connection.getInputStream();
+                                    //返回输入流
+                                    InputStream in = connection.getInputStream();
 
-                                                    //读取输入流
-                                                    reader = new BufferedReader(new InputStreamReader(in));
-                                                    StringBuilder result = new StringBuilder();
-                                                    String line;
-                                                    while ((line = reader.readLine()) != null) {
-                                                        result.append(line);
-                                                    }
-                                                    String result1 = result.toString();
-                                                    String regix = "\\s*|\t|\r|\n";
-                                                    String regTag = "<[^>]*>";
-                                                    String text = result1.replaceAll(regix, "").replaceAll(regTag, "");
-                                                    show(text.toString());
-
-                                                }
-                                                catch (MalformedURLException e) {
-                                                    e.printStackTrace();
-                                                } catch (ProtocolException e) {
-                                                    e.printStackTrace();
-                                                } catch (IOException e) {
-                                                    e.printStackTrace();
-                                                } finally {
-                                                    if (reader != null) {
-                                                        try {
-                                                            reader.close();
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                    }
-                                                    if (connection != null) {//关闭连接
-                                                        connection.disconnect();
-                                                    }
-                                                }
-                                            }
-                                        }).start();
-                                    } else {
-                                        Toast.makeText(getApplicationContext(), "验证码错误，请重新输入", Toast.LENGTH_SHORT).show();
+                                    //读取输入流
+                                    reader = new BufferedReader(new InputStreamReader(in));
+                                    StringBuilder result = new StringBuilder();
+                                    String line;
+                                    while ((line = reader.readLine()) != null) {
+                                        result.append(line);
                                     }
+                                    String result1 = result.toString();
+                                    String regix = "\\s*|\t|\r|\n";
+                                    String regTag = "<[^>]*>";
+                                    String text = result1.replaceAll(regix, "").replaceAll(regTag, "");
+                                    show(text.toString());
+
+                                }
+                                catch (MalformedURLException e) {
+                                    e.printStackTrace();
+                                } catch (ProtocolException e) {
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                } finally {
+                                    if (reader != null) {
+                                        try {
+                                            reader.close();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                    if (connection != null) {//关闭连接
+                                        connection.disconnect();
+                                    }
+                                }
+                            }
+                        }).start();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "验证码错误，请重新输入", Toast.LENGTH_SHORT).show();
+                    }
 
                 } else {
                     Toast.makeText(getApplicationContext(), "请完善信息！", Toast.LENGTH_SHORT).show();
@@ -201,5 +205,10 @@ public class PhoneRegisterActivity extends AppCompatActivity implements View.OnC
             }
         });
 
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        removeActivity(this);
     }
 }

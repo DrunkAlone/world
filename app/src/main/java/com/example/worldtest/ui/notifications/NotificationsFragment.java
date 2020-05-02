@@ -15,7 +15,10 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.worldtest.R;
 import com.example.worldtest.loginActivity;
+import com.example.worldtest.myinfo.SettingsByPreferenceActivity;
 import com.example.worldtest.ui.home.find;
+
+import static com.example.worldtest.ActivityCollectorUtil.finishAllActivity;
 
 public class NotificationsFragment extends Fragment {
 
@@ -46,6 +49,7 @@ public class NotificationsFragment extends Fragment {
         mBtMainLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finishAllActivity();
                 Intent intent = new Intent(NotificationsFragment.this.getActivity(), loginActivity.class);
                 startActivity(intent);
 
@@ -60,6 +64,14 @@ public class NotificationsFragment extends Fragment {
                 intent.putExtra("password",password);
                 startActivity(intent);
 
+            }
+        });
+        final Button mBtMainSetting = root.findViewById(R.id.bt_main_setting);
+        mBtMainSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(NotificationsFragment.this.getActivity(), SettingsByPreferenceActivity.class);
+                startActivity(intent);
             }
         });
         return root;

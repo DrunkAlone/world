@@ -24,6 +24,9 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 
+import static com.example.worldtest.ActivityCollectorUtil.addActivity;
+import static com.example.worldtest.ActivityCollectorUtil.removeActivity;
+
 public class InfoActivity extends AppCompatActivity implements View.OnClickListener {
     //private DBOpenHelper mDBOpenHelper;
     private Button MBtMainUpdate;
@@ -42,6 +45,7 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
+        addActivity(this);
         Intent intent = getIntent();
         name = intent.getStringExtra("name");
         //password = intent.getStringExtra("password");
@@ -171,5 +175,10 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        removeActivity(this);
     }
 }

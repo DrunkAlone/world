@@ -31,6 +31,8 @@ import java.net.URLEncoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.example.worldtest.ActivityCollectorUtil.addActivity;
+import static com.example.worldtest.ActivityCollectorUtil.removeActivity;
 import static java.util.regex.Pattern.compile;
 
 /**
@@ -67,7 +69,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
+        addActivity(this);
         initView();
 
         //mDBOpenHelper = new DBOpenHelper(this);
@@ -126,17 +128,17 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             case R.id.bt_registeractivity_register:    //注册按钮
                 //获取用户输入的用户名、密码、验证码
 
-                            name = mEtRegisteractivityUsername.getText().toString().trim();
-                            password = mEtRegisteractivityPassword1.getText().toString().trim();
-                            phoneCode = mEtRegisteractivityPhonecodes.getText().toString().toLowerCase();
-                            number = mEtRegisteractivityNumber.getText().toString().trim();
-                            sex = "";
-                            //注册验证
-                            if (mRBRegisteractivityfemale.isChecked()) {
-                                sex = "女";
-                            } else if (mRBRegisteractivitymale.isChecked()) {
-                                sex = "男";
-                            }
+                name = mEtRegisteractivityUsername.getText().toString().trim();
+                password = mEtRegisteractivityPassword1.getText().toString().trim();
+                phoneCode = mEtRegisteractivityPhonecodes.getText().toString().toLowerCase();
+                number = mEtRegisteractivityNumber.getText().toString().trim();
+                sex = "";
+                //注册验证
+                if (mRBRegisteractivityfemale.isChecked()) {
+                    sex = "女";
+                } else if (mRBRegisteractivitymale.isChecked()) {
+                    sex = "男";
+                }
                 try {
                     sex = URLEncoder.encode(URLEncoder.encode(sex, "utf-8"), "utf-8");
                 } catch (UnsupportedEncodingException e) {
@@ -229,16 +231,16 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         if(str==null){
             return false;
         }else{
-        for (int i = 0; i < str.length(); i++) {
-            if (Character.isDigit(str.charAt(i))) {   //用char包装类中的判断数字的方法判断每一个字符
-                isDigit = true;
-            } else if (Character.isLetter(str.charAt(i))) {  //用char包装类中的判断字母的方法判断每一个字符
-                isLetter = true;
+            for (int i = 0; i < str.length(); i++) {
+                if (Character.isDigit(str.charAt(i))) {   //用char包装类中的判断数字的方法判断每一个字符
+                    isDigit = true;
+                } else if (Character.isLetter(str.charAt(i))) {  //用char包装类中的判断字母的方法判断每一个字符
+                    isLetter = true;
+                }
             }
-        }
-        String regex = "^[a-zA-Z0-9]+$";
-        boolean isRight = isDigit && isLetter && str.matches(regex);
-        return isRight;
+            String regex = "^[a-zA-Z0-9]+$";
+            boolean isRight = isDigit && isLetter && str.matches(regex);
+            return isRight;
         }
     }
     public static boolean IsNumber(String str) {
@@ -269,5 +271,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         });
 
     }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        removeActivity(this);
     }
+}
 

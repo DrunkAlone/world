@@ -17,8 +17,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.worldtest.ui.notifications.NotificationsFragment;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,6 +25,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+
+import static com.example.worldtest.ActivityCollectorUtil.addActivity;
+import static com.example.worldtest.ActivityCollectorUtil.removeActivity;
 
 /**
  * 此类 implements View.OnClickListener 之后，
@@ -50,6 +51,7 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        addActivity(this);
         initView();
         //mDBOpenHelper = new DBOpenHelper(this);
     }
@@ -194,6 +196,11 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
                 }
             }
         });
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        removeActivity(this);
     }
 }
 

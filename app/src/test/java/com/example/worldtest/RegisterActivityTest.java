@@ -9,7 +9,7 @@ public class RegisterActivityTest {
 
     @Before
     public void setUp() throws Exception {
-        System.out.println("开始测试");
+        System.out.println("Moongazer开始测试");
     }
 /*
     @Test

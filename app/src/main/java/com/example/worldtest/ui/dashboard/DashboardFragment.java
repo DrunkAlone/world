@@ -5,40 +5,47 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.Button;
+import android.widget.EditText;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.worldtest.R;
-
-import cn.bmob.v3.Bmob;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.SaveListener;
+import com.example.worldtest.ui.dashboard.finddiscover.FindDiscover;
 
 public class DashboardFragment extends Fragment {
+    private View root;
 
-    private DashboardViewModel dashboardViewModel;
+    public static DashboardFragment newInstance() {
+        Bundle args = new Bundle();
+        DashboardFragment fragment = new DashboardFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
+    @Nullable
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        dashboardViewModel =
-                ViewModelProviders.of(this).get(DashboardViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
-        final TextView textView = root.findViewById(R.id.text_dashboard);
-        dashboardViewModel.getText().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
-        Intent intent = new Intent(DashboardFragment.this.getActivity(), DiscoverActivity.class);
-        startActivity(intent);
+            root = inflater.inflate(R.layout.fragment_dashboard, container, false);
+            initView(root);
         return root;
+    }
+    private void initView(View root){
+        final Button b = root.findViewById(R.id.findDisButton);
+        b.setOnClickListener(v -> {
+            final EditText editText=getView().findViewById(R.id.findDisText);
+            String discoverName=editText.getText().toString().trim();
+            Intent intent=new Intent(getActivity(), FindDiscover.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("discoverName", discoverName);
+            intent.putExtras(bundle);
+            startActivity(intent);
+
+        });
     }
 
 }

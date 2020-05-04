@@ -20,7 +20,7 @@ public class DiscoverActivity extends AppCompatActivity {
         setContentView(R.layout.activity_discover);
         addActivity(this);
 
-        Bmob.initialize(this, "fef9bd212ab5de3a49d6c5824304c912");
+      //  Bmob.initialize(this, "77494e1ab861a4159c7161d78fa33b53");
 
         /*增加一条数据
         Moment moment = new Moment();

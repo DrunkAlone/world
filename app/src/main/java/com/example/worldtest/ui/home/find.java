@@ -119,18 +119,12 @@ public class find extends AppCompatActivity {
 
                     linearLayout.setGravity(Gravity.CENTER);
                     ImageView imageView=new ImageView(find.this);
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(200,200);
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(1000,800);
                     imageView.setLayoutParams(params);
 
-                    imageView.setImageResource(R.drawable.jiazaishibai);
+                    imageView.setImageResource(R.drawable.no_infor);
                     linearLayout.addView(imageView);
 
-                    TextView textView=new TextView(find.this);
-                    textView.setText("未搜索到相关信息");
-
-                    textView.setGravity(Gravity.CENTER_HORIZONTAL);
-                    textView.setTextSize(25);
-                    linearLayout.addView(textView);
                     progressDialog.dismiss();
                 } else {
                     String [] spString = text.split("&nbsp;&nbsp;&nbsp;");

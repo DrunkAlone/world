@@ -17,9 +17,13 @@ import com.example.worldtest.ui.dashboard.DashboardFragment;
 import com.example.worldtest.ui.home.HomeFragment;
 import com.example.worldtest.ui.notifications.NotificationsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.bmob.v3.Bmob;
 
 import static com.example.worldtest.ActivityCollectorUtil.addActivity;
 import static com.example.worldtest.ActivityCollectorUtil.removeActivity;
@@ -50,7 +54,6 @@ private BottomNavigationView nav_bottom;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         initData();
         initView(savedInstanceState);
     }

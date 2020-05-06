@@ -25,6 +25,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.worldtest.R;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -74,6 +76,7 @@ public class HomeFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void initView(View root){
         linearLayout=root.findViewById(R.id.line1);
+        showProgressDialog("提示", "正在加载......");
         send(linearLayout);
         //下滑触发
          scrollView=root.findViewById(R.id.scrollView3);
@@ -110,7 +113,7 @@ public class HomeFragment extends Fragment {
 
 
     private void send(final LinearLayout linearLayout) {
-        showProgressDialog("提示", "正在加载......");
+
         //开启线程，发送请求
         new Thread(() -> {
 
@@ -195,7 +198,7 @@ public class HomeFragment extends Fragment {
 
 
     private void send1(final String id,final String show, final LinearLayout linearLayout) {
-        showProgressDialog("提示", "正在加载......");
+
         //开启线程，发送请求
         new Thread(() -> {
 
@@ -252,6 +255,7 @@ public class HomeFragment extends Fragment {
             String regTag = "<[^>]*>";
             String text = result.replaceAll(regFormat, "").replaceAll(regTag, "");
             try {
+
                 Bitmap bitmap;
                 byte[] data;
                 Drawable drawable;

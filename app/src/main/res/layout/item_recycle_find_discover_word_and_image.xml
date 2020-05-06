@@ -52,6 +52,12 @@
 
 
         </LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/nine_grid"
+            android:paddingTop="11dp"
+        />
 
         <RelativeLayout
             xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -81,4 +87,4 @@
 
     </LinearLayout>
 
-    </FrameLayout>
+</FrameLayout>

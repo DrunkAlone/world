@@ -1,14 +1,12 @@
 package com.example.worldtest.ui.dashboard.finddiscover;
 
-import android.content.Context;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
+
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.worldtest.R;
@@ -17,12 +15,12 @@ import com.example.worldtest.ui.dashboard.Moment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FindDiscoverAdapter extends RecyclerView.Adapter<FindDiscoverAdapter.baseDiscoverViewHolder>{
-    private static final String TAG =FindDiscoverAdapter.class.getSimpleName();
+public  class DiscoverWithImageAdapter extends RecyclerView.Adapter<DiscoverWithImageAdapter.baseDiscoverViewHolder>{
 
     private List<Moment> momentList = new ArrayList<>();
-
-    public FindDiscoverAdapter(List<Moment> list) {
+    private String [] images1;
+    private String images;
+    public DiscoverWithImageAdapter(List<Moment> list) {
         System.out.println( "setVerticalDataList: " + list.size());
         momentList = list;
     }
@@ -30,7 +28,7 @@ public class FindDiscoverAdapter extends RecyclerView.Adapter<FindDiscoverAdapte
 
     @Override
     public baseDiscoverViewHolder onCreateViewHolder( ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recycler_find_discover_only_word, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recycle_find_discover_word_and_image, parent, false);
         return new baseDiscoverViewHolder(view);
     }
 
@@ -40,7 +38,13 @@ public class FindDiscoverAdapter extends RecyclerView.Adapter<FindDiscoverAdapte
         holder.txt_user_name.setText(momentList.get(position).getUser_name());
         holder.txt_content.setText(momentList.get(position).getContent());
         holder.txt_publish_time.setText(momentList.get(position).getCreatedAt());
-
+        if(momentList.get(position).getPicture()!=null) {
+            holder.mNineView.setLayoutManager(new NineGridLayoutManager(holder.mNineView.getContext()));
+            images=momentList.get(position).getPicture();
+            images1= images.split(";");
+            holder.mNineView.setAdapter(new NineGridAdapter(images1));
+           // holder.mNineView.setAdapter(new NineGridAdapter(position + 1));
+        }
     }
 
     @Override
@@ -51,14 +55,14 @@ public class FindDiscoverAdapter extends RecyclerView.Adapter<FindDiscoverAdapte
     public class baseDiscoverViewHolder extends RecyclerView.ViewHolder {
 
         TextView  txt_content,txt_user_name,txt_publish_time;
-        //ImageView imageView;
+        RecyclerView mNineView;
 
         public baseDiscoverViewHolder(View itemView) {
             super(itemView);
             txt_content = itemView.findViewById(R.id.txt_content);
             txt_user_name = itemView.findViewById(R.id.txt_user_name);
             txt_publish_time = itemView.findViewById(R.id.txt_publish_time);
-            //imageView=itemView.findViewById(R.id.img_avatar);
+            mNineView = itemView.findViewById(R.id.nine_grid);
         }
     }
 }

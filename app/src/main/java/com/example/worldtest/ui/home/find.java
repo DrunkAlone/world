@@ -9,7 +9,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -64,83 +63,72 @@ public class find extends AppCompatActivity {
     public void send(final String urlname, final LinearLayout linearLayout) {
         //开启线程，发送请求
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+        new Thread(() -> {
 
-                HttpURLConnection connection = null;
-                BufferedReader reader = null;
-                try {
-                    URL url = new URL(urlname);
-                    connection = (HttpURLConnection) url.openConnection();
-                    //设置请求方法
-                    connection.setRequestMethod("GET");
-                    //设置连接超时时间（毫秒）
-                    connection.setConnectTimeout(50000);
-                    //设置读取超时时间（毫秒）
-                    connection.setReadTimeout(50000);
-                    //返回输入流
-                    InputStream in = connection.getInputStream();
-                    //读取输入流
-                    reader = new BufferedReader(new InputStreamReader(in));
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        show(line,linearLayout);
-                    }
-
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (ProtocolException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (reader != null) {
-                        try {
-                            reader.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    if (connection != null) {//关闭连接
-                        connection.disconnect();
-                    }
-
-
+            HttpURLConnection connection = null;
+            BufferedReader reader = null;
+            try {
+                URL url = new URL(urlname);
+                connection = (HttpURLConnection) url.openConnection();
+                //设置请求方法
+                connection.setRequestMethod("GET");
+                //设置连接超时时间（毫秒）
+                connection.setConnectTimeout(50000);
+                //设置读取超时时间（毫秒）
+                connection.setReadTimeout(50000);
+                //返回输入流
+                InputStream in = connection.getInputStream();
+                //读取输入流
+                reader = new BufferedReader(new InputStreamReader(in));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    show(line,linearLayout);
                 }
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (ProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (connection != null) {//关闭连接
+                    connection.disconnect();
+                }
+
+
             }
         }).start();
 
 
     }
     private void show(final String line, final LinearLayout linearLayout) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                String regFormat = "\t|\r|\n";
-                String regTag = "<[^>]*>";
-                final String text = line.replaceAll(regFormat, "").replaceAll(regTag, "");
-                if (text.equals("")||text.trim().length()==0) {
-                } else if(text.equals("no_find")){
+        runOnUiThread(() -> {
+            String regFormat = "\t|\r|\n";
+            String regTag = "<[^>]*>";
+            final String text = line.replaceAll(regFormat, "").replaceAll(regTag, "");
+            if (!text.equals("") && text.trim().length() != 0) {
+                if(text.equals("no_find")){
 
                     linearLayout.setGravity(Gravity.CENTER);
                     ImageView imageView=new ImageView(find.this);
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(200,200);
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(1000,800);
                     imageView.setLayoutParams(params);
 
-                    imageView.setImageResource(R.drawable.jiazaishibai);
+                    imageView.setImageResource(R.drawable.no_infor);
                     linearLayout.addView(imageView);
 
-                    TextView textView=new TextView(find.this);
-                    textView.setText("未搜索到相关信息");
-
-                    textView.setGravity(Gravity.CENTER_HORIZONTAL);
-                    textView.setTextSize(25);
-                    linearLayout.addView(textView);
                     progressDialog.dismiss();
                 } else {
                     String [] spString = text.split("&nbsp;&nbsp;&nbsp;");
-                    if(spString.length<3){}else {
+                    if (spString.length >= 3) {
                         String id = spString[0];
                         String name = spString[1];
                         //  System.out.println(id);
@@ -156,56 +144,52 @@ public class find extends AppCompatActivity {
 
                 }
             }
-
         });
 
     }
     private void send1(final String id,final String name, final LinearLayout linearLayout) {
         //开启线程，发送请求
         showProgressDialog("提示", "正在加载......");
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+        new Thread(() -> {
 
-                HttpURLConnection  connection = null;
-                BufferedReader reader=null;
-                try {
-                    String path = URLEncoder.encode(URLEncoder.encode(id, "utf-8"), "utf-8");
-                    URL url1 = new URL("http://47.100.139.135:8080/TestLink/ImageServlet?id=" + path);
-                    //System.out.println(url1);
-                    connection = (HttpURLConnection) url1.openConnection();
-                    //设置请求方法
-                    connection.setRequestMethod("GET");
-                    //设置连接超时时间（毫秒）
-                    connection.setConnectTimeout(50000);
-                    //设置读取超时时间（毫秒）
-                    connection.setReadTimeout(50000);
-                    //返回输入流
-                    InputStream in = connection.getInputStream();
-                    reader = new BufferedReader(new InputStreamReader(in));
-                    StringBuilder result = new StringBuilder();
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        result.append(line);
+            HttpURLConnection  connection = null;
+            BufferedReader reader=null;
+            try {
+                String path = URLEncoder.encode(URLEncoder.encode(id, "utf-8"), "utf-8");
+                URL url1 = new URL("http://47.100.139.135:8080/TestLink/ImageServlet?id=" + path);
+                //System.out.println(url1);
+                connection = (HttpURLConnection) url1.openConnection();
+                //设置请求方法
+                connection.setRequestMethod("GET");
+                //设置连接超时时间（毫秒）
+                connection.setConnectTimeout(50000);
+                //设置读取超时时间（毫秒）
+                connection.setReadTimeout(50000);
+                //返回输入流
+                InputStream in = connection.getInputStream();
+                reader = new BufferedReader(new InputStreamReader(in));
+                StringBuilder result = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    result.append(line);
+                }
+                show1(id,name,result.toString(),linearLayout);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (ProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                    show1(id,name,result.toString(),linearLayout);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (ProtocolException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (reader != null) {
-                        try {
-                            reader.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    if (connection != null) {//关闭连接
-                        connection.disconnect();
-                    }
+                }
+                if (connection != null) {//关闭连接
+                    connection.disconnect();
                 }
             }
         }).start();
@@ -215,45 +199,39 @@ public class find extends AppCompatActivity {
 
     private void show1(final String id,final String name,final String result,final LinearLayout linearLayout) {
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        runOnUiThread(() -> {
 
-                String regFormat = "\\s*|\t|\r|\n";
-                String regTag = "<[^>]*>";
-                final String text = result.replaceAll(regFormat, "").replaceAll(regTag, "");
-                try {
-                    // System.out.println("text:"+text);
-                    Bitmap bitmap;
-                    byte[] data;
-                    Drawable drawable;
-                    data = GetUserHead(text);
-                    bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                    drawable = new BitmapDrawable(getResources(),bitmap);
-                    drawable.setBounds(4,0,980,600);
+            String regFormat = "\\s*|\t|\r|\n";
+            String regTag = "<[^>]*>";
+            final String text = result.replaceAll(regFormat, "").replaceAll(regTag, "");
+            try {
+                // System.out.println("text:"+text);
+                Bitmap bitmap;
+                byte[] data;
+                Drawable drawable;
+                data = GetUserHead(text);
+                bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                drawable = new BitmapDrawable(getResources(),bitmap);
+                drawable.setBounds(4,0,980,600);
 
-                    Button button = new Button(find.this);
-                    button.setCompoundDrawables(null,drawable,null,null);
-                    button.setCompoundDrawablePadding(5);
-                    button.setText(name);
-                    button.setHint(id);
-                    linearLayout.addView(button);
-                    button.setOnClickListener(new Button.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent();
-                            intent.setClass(find.this, Introduction.class);
-                            Bundle bundle = new Bundle();
-                            bundle.putString("textId", id);
-                            intent.putExtras(bundle);
-                            startActivity(intent);
+                Button button = new Button(find.this);
+                button.setCompoundDrawables(null,drawable,null,null);
+                button.setCompoundDrawablePadding(5);
+                button.setText(name);
+                button.setHint(id);
+                linearLayout.addView(button);
+                button.setOnClickListener(v -> {
+                    Intent intent = new Intent();
+                    intent.setClass(find.this, Introduction.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("textId", id);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
 
-                        }
-                    });
+                });
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         });
 

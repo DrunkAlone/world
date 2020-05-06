@@ -11,6 +11,8 @@ import androidx.preference.PreferenceFragment;
 
 import com.example.worldtest.R;
 
+import static com.example.worldtest.ActivityCollectorUtil.removeActivity;
+
 public class SettingsByPreferenceActivity extends AppCompatActivity {
 
     @Override
@@ -38,6 +40,11 @@ public class SettingsByPreferenceActivity extends AppCompatActivity {
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
 
+        }
+        @Override
+        public void onDestroy() {
+            super.onDestroy();
+            removeActivity(getActivity());
         }
 
 //        @Override
